@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --require co-mocha --reporter spec test/*.test.js",
     "lint": "eslint --fix lib",
-    "cov": "istanbul cover --report html ./node_modules/.bin/_mocha -- --reporter spec --require co-mocha test/*.test.js"
+    "test-cov": "istanbul cover --report html ./node_modules/.bin/_mocha -- --reporter spec --require co-mocha test/*.test.js"
   },
   "keywords": [
     "Aliyun",

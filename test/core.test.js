@@ -42,5 +42,4 @@ describe('core', function() {
       });
     }).to.throwException(/must pass "config\.secretAccessKey"/);
   });
-
 });
