@@ -24,7 +24,6 @@ describe('core', function() {
     }).to.throwException(/must pass "config\.apiVersion"/);
   });
 
-
   it('should pass into "config.accessKeyId"', function() {
     expect(function () {
       new Core({

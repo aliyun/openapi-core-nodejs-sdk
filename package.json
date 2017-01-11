@@ -1,8 +1,8 @@
 {
-  "name": "aliyun-node",
+  "name": "@alicloud/pop-core",
   "version": "1.0.0",
-  "description": "",
-  "main": "lib/index.js",
+  "description": "AliCloud POP SDK core",
+  "main": "lib/core.js",
   "scripts": {
     "test": "mocha --require co-mocha --reporter spec test/*.test.js",
     "lint": "eslint --fix lib",
@@ -10,7 +10,9 @@
   },
   "keywords": [
     "Aliyun",
+    "AliCloud",
     "OpenAPI",
+    "POP",
     "SDK",
     "Core"
   ],
@@ -19,6 +21,9 @@
   "dependencies": {
     "httpx": "^2.0.0"
   },
+  "files": [
+    "lib"
+  ],
   "devDependencies": {
     "co-mocha": "^1.1.3",
     "eslint": "^3.13.0",
