@@ -1,12 +1,13 @@
 {
   "name": "@alicloud/pop-core",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "AliCloud POP SDK core",
   "main": "lib/core.js",
+  "types": "lib/core.d.ts",
   "scripts": {
     "test": "mocha --require co-mocha --reporter spec test/*.test.js",
     "lint": "eslint --fix lib",
-    "test-cov": "istanbul cover --report html ./node_modules/.bin/_mocha -- --reporter spec --require co-mocha test/*.test.js"
+    "test-cov": "istanbul cover --report html ./node_modules/.bin/_mocha -- --require co-mocha --reporter spec test/*.test.js"
   },
   "keywords": [
     "Aliyun",
