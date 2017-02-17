@@ -10,19 +10,25 @@ Install it and write into package.json dependences.
 $ npm install @alicloud/pop-core -S
 ```
 
+## Prerequisite
+
+Node.js >= 6.x
+
 ## Usage
 
 ```js
-module.exports = function (endpoint, apiVersion, action, params, accessKeyId, secretAccessKey) {
-  var client = new Core({
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey,
-    endpoint: endpoint,
-    apiVersion: apiVersion
-  });
+var Core = require('@alicloud/pop-core');
 
-  return client.request(action, params);
-};
+var client = new Core({
+  accessKeyId: '<accessKeyId>',
+  secretAccessKey: '<secretAccessKey>',
+  endpoint: '<endpoint>',
+  apiVersion: '<apiVersion>'
+});
+
+// => returns Promise
+client.request(action, params);
+// co/yield, async/await
 ```
 
 ## License
