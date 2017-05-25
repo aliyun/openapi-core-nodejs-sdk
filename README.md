@@ -16,10 +16,12 @@ Node.js >= 6.x
 
 ## Usage
 
-```js
-var Core = require('@alicloud/pop-core');
+The RPC style client:
 
-var client = new Core({
+```js
+var RPCClient = require('@alicloud/pop-core').RPCClient;
+
+var client = new RPCClient({
   accessKeyId: '<accessKeyId>',
   secretAccessKey: '<secretAccessKey>',
   endpoint: '<endpoint>',
@@ -28,6 +30,24 @@ var client = new Core({
 
 // => returns Promise
 client.request(action, params);
+// co/yield, async/await
+```
+
+The ROA style client:
+
+```js
+var ROAClient = require('@alicloud/pop-core').ROAClient;
+
+var client = new ROAClient({
+  accessKeyId: '<accessKeyId>',
+  accessKeySecret: '<secretAccessKey>',
+  endpoint: '<endpoint>',
+  apiVersion: '<apiVersion>'
+});
+
+// => returns Promise
+// request(HTTPMethod, uriPath, queries, body, headers);
+client.request('GET', '/regions');
 // co/yield, async/await
 ```
 
