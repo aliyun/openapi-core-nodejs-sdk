@@ -33,13 +33,13 @@ describe('core', function() {
     }).to.throwException(/must pass "config\.accessKeyId"/);
   });
 
-  it('should pass into "config.secretAccessKey"', function() {
+  it('should pass into "config.accessKeySecret"', function() {
     expect(function () {
       new Core({
         endpoint: 'http://ecs.aliyuncs.com/',
         apiVersion: '1.0',
         accessKeyId: 'accessKeyId'
       });
-    }).to.throwException(/must pass "config\.secretAccessKey"/);
+    }).to.throwException(/must pass "config\.accessKeySecret"/);
   });
 });

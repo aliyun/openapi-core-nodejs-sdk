@@ -48,7 +48,6 @@ describe('roa core', function() {
       accessKeyId: process.env.ACCESS_KEY_ID,
       accessKeySecret: process.env.ACCESS_KEY_SECRET,
       endpoint: 'http://ros.aliyuncs.com',
-      region: 'cn-hangzhou',
       apiVersion: '2015-09-01'
     });
 
