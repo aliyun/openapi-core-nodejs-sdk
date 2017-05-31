@@ -20,7 +20,7 @@
   "author": "Jackson Tian",
   "license": "MIT",
   "dependencies": {
-    "httpx": "^2.1.1",
+    "httpx": "^2.1.2",
     "kitx": "^1.2.1"
   },
   "files": [
