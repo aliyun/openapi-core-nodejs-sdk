@@ -21,7 +21,8 @@
   "license": "MIT",
   "dependencies": {
     "httpx": "^2.1.2",
-    "kitx": "^1.2.1"
+    "kitx": "^1.2.1",
+    "xml2js": "^0.4.17"
   },
   "files": [
     "lib",
