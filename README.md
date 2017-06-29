@@ -46,7 +46,8 @@ var client = new ROAClient({
 });
 
 // => returns Promise
-// request(HTTPMethod, uriPath, queries, body, headers);
+// request(HTTPMethod, uriPath, queries, body, headers, options);
+// options => {timeout}
 client.request('GET', '/regions');
 // co/yield, async/await
 ```
