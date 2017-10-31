@@ -31,6 +31,15 @@ var client = new RPCClient({
 // => returns Promise
 client.request(action, params);
 // co/yield, async/await
+
+// options
+client.request(action, params, {
+  timeout: 3000, // default 3000 ms
+  formatAction: true, // default true, format the action to Action
+  formatParams: true, // default true, format the parameter name to first letter upper case
+  method: 'GET', // set the http method, default is GET
+  headers: {}, // set the http request headers
+});
 ```
 
 The ROA style client:
