@@ -61,5 +61,10 @@ describe('roa core', function() {
       expect(result).to.have.property('Regions');
     });
 
+    it('get raw body should ok', function* () {
+      var opts = {rawBody: true};
+      var result = yield client.get('/regions', {}, {}, opts);
+      expect(result).to.be.a('string');
+    });
   });
 });
