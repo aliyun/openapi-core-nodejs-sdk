@@ -16,6 +16,14 @@ describe('core', function() {
     }).to.throwException(/must pass "config\.endpoint"/);
   });
 
+  it('should pass into valid "config.endpoint"', function() {
+    expect(function () {
+      new Core({
+        endpoint: 'ecs.aliyuncs.com/'
+      });
+    }).to.throwException(/"config\.endpoint" must starts with 'https:\/\/' or 'http:\/\/'\./);
+  });
+
   it('should pass into "config.apiVersion"', function() {
     expect(function () {
       new Core({
