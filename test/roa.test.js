@@ -16,6 +16,14 @@ describe('roa core', function() {
     }).to.throwException(/must pass "config\.endpoint"/);
   });
 
+  it('should pass into valid "config.endpoint"', function() {
+    expect(function () {
+      new ROAClient({
+        endpoint: 'ecs.aliyuncs.com/'
+      });
+    }).to.throwException(/"config\.endpoint" must starts with 'https:\/\/' or 'http:\/\/'\./);
+  });
+
   it('should pass into "config.apiVersion"', function() {
     expect(function () {
       new ROAClient({
@@ -51,19 +59,19 @@ describe('roa core', function() {
       apiVersion: '2015-09-01'
     });
 
-    it('request', function* () {
-      var result = yield client.request('GET', '/regions');
+    it('request', async function () {
+      var result = await client.request('GET', '/regions');
       expect(result).to.have.property('Regions');
     });
 
-    it('get should ok', function* () {
-      var result = yield client.get('/regions');
+    it('get should ok', async function () {
+      var result = await client.get('/regions');
       expect(result).to.have.property('Regions');
     });
 
-    it('get raw body should ok', function* () {
+    it('get raw body should ok', async function () {
       var opts = {rawBody: true};
-      var result = yield client.get('/regions', {}, {}, opts);
+      var result = await client.get('/regions', {}, {}, opts);
       expect(result).to.be.a('string');
     });
   });
