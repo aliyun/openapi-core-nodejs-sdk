@@ -37,6 +37,6 @@ declare namespace Core {
         endpoint: string;
         apiVersion: string;
         accessKeyId: string;
-        secretAccessKey: string;
+        accessKeySecret: string;
     }
 }
