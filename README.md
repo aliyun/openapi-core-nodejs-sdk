@@ -69,5 +69,33 @@ client.request('GET', '/regions');
 // co/yield, async/await
 ```
 
+### Custom opts
+
+We offer two ways to customize request opts.
+
+One way is passing opts through the Client constructor. You should treat opts passed through the constructor as default custom opts, because all requests will use this opts.
+
+```js
+var client = new RPCClient({
+  accessKeyId: '<accessKeyId>',
+  accessKeySecret: '<accessKeySecret>',
+  endpoint: '<endpoint>',
+  apiVersion: '<apiVersion>',
+  opts: {
+    timeout: 3000
+  }
+});
+```
+
+Another way is passing opts through the function's parameter. You should use this way when you want to just pass opts in specific functions.
+
+```js
+client.request(action, params, {
+  timeout: 3000
+});
+```
+
+When both ways are used, opts will be merged. But for the opt with the same key, the opts provided by the function parameter overrides the opts provided by the constructor.
+
 ## License
 The MIT License
