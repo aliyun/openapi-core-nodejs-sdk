@@ -38,6 +38,6 @@ declare namespace Core {
         apiVersion: string;
         accessKeyId: string;
         accessKeySecret: string;
-        opts: object;
+        opts?: object;
     }
 }
