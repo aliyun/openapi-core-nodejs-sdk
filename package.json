@@ -1,6 +1,6 @@
 {
   "name": "@alicloud/pop-core",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "description": "AliCloud POP SDK core",
   "main": "index.js",
   "types": "lib/core.d.ts",
