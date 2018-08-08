@@ -26,7 +26,7 @@ export = Core;
 declare class Core {
     constructor(config: Core.Config);
 
-    request(action: String, params: Object, options?: Object): Promise;
+    request(action: String, params: Object, options?: Object): Promise<any>;
 }
 
 /*~ If you want to expose types from your module as well, you can
