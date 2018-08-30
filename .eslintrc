@@ -44,5 +44,12 @@
     "before": true,
     "after": true
   },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "script",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
   "extends": "eslint:recommended"
 }
