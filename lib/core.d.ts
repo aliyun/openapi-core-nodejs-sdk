@@ -27,6 +27,8 @@ declare class Core {
     constructor(config: Core.Config);
 
     request<T>(action: String, params: Object, options?: Object): Promise<T>;
+    static ROAClient:typeof Core
+    static RPCClient:typeof Core
 }
 
 /*~ If you want to expose types from your module as well, you can
