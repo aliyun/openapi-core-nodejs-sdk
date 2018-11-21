@@ -23,12 +23,15 @@
 export = Core;
 
 /*~ Write your module's methods and properties in this class */
-declare class Core {
+declare class CoreConstructor {
     constructor(config: Core.Config);
 
     request<T>(action: String, params: Object, options?: Object): Promise<T>;
-    static ROAClient:typeof Core
-    static RPCClient:typeof Core
+}
+
+declare class Core extends CoreConstructor {
+    static ROAClient:typeof CoreConstructor
+    static RPCClient:typeof CoreConstructor
 }
 
 /*~ If you want to expose types from your module as well, you can
