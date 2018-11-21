@@ -9,7 +9,7 @@ The core SDK of POP API.
 [npm-image]: https://img.shields.io/npm/v/@alicloud/pop-core.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/@alicloud/pop-core
 [travis-image]: https://img.shields.io/travis/aliyun/openapi-core-nodejs-sdk/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/aliyun/openapi-core-nodejs-sdk.svg?branch=master
+[travis-url]: https://travis-ci.org/aliyun/openapi-core-nodejs-sdk
 [cov-image]: https://codecov.io/gh/aliyun/openapi-core-nodejs-sdk/branch/master/graph/badge.svg
 [cov-url]: https://codecov.io/gh/aliyun/openapi-core-nodejs-sdk
 
