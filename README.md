@@ -23,7 +23,7 @@ $ npm install @alicloud/pop-core -S
 
 ## Prerequisite
 
-Node.js >= 6.x
+Node.js >= 8.x
 
 ### Notes
 
