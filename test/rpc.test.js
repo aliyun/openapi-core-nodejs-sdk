@@ -1,24 +1,24 @@
 'use strict';
 
 const expect = require('expect.js');
-const Core = require('../lib/core');
+const RPCClient = require('../lib/rpc');
 
-describe('core', function() {
+describe('rpc core', function() {
   it('should pass into "config"', function() {
     expect(function () {
-      new Core();
+      new RPCClient();
     }).to.throwException(/must pass "config"/);
   });
 
   it('should pass into "config.endpoint"', function() {
     expect(function () {
-      new Core({});
+      new RPCClient({});
     }).to.throwException(/must pass "config\.endpoint"/);
   });
 
   it('should pass into valid "config.endpoint"', function() {
     expect(function () {
-      new Core({
+      new RPCClient({
         endpoint: 'ecs.aliyuncs.com/'
       });
     }).to.throwException(/"config\.endpoint" must starts with 'https:\/\/' or 'http:\/\/'\./);
@@ -26,7 +26,7 @@ describe('core', function() {
 
   it('should pass into "config.apiVersion"', function() {
     expect(function () {
-      new Core({
+      new RPCClient({
         endpoint: 'http://ecs.aliyuncs.com/'
       });
     }).to.throwException(/must pass "config\.apiVersion"/);
@@ -34,7 +34,7 @@ describe('core', function() {
 
   it('should pass into "config.accessKeyId"', function() {
     expect(function () {
-      new Core({
+      new RPCClient({
         endpoint: 'http://ecs.aliyuncs.com/',
         apiVersion: '1.0'
       });
@@ -43,7 +43,7 @@ describe('core', function() {
 
   it('should pass into "config.accessKeySecret"', function() {
     expect(function () {
-      new Core({
+      new RPCClient({
         endpoint: 'http://ecs.aliyuncs.com/',
         apiVersion: '1.0',
         accessKeyId: 'accessKeyId'
@@ -52,7 +52,7 @@ describe('core', function() {
   });
 
   describe('request', function() {
-    var client = new Core({
+    var client = new RPCClient({
       accessKeyId: process.env.ACCESS_KEY_ID,
       accessKeySecret: process.env.ACCESS_KEY_SECRET,
       endpoint: 'https://ecs.aliyuncs.com',
