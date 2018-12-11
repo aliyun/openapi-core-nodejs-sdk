@@ -20,24 +20,19 @@
 /*~ This declaration specifies that the class constructor function
  *~ is the exported object from the file
  */
-export = Core;
+export = RPCClient;
 
 /*~ Write your module's methods and properties in this class */
-declare class CoreConstructor {
-    constructor(config: Core.Config);
+declare class RPCClient {
+    constructor(config: RPCClient.Config);
 
     request<T>(action: String, params: Object, options?: Object): Promise<T>;
-}
-
-declare class Core extends CoreConstructor {
-    static ROAClient:typeof CoreConstructor
-    static RPCClient:typeof CoreConstructor
 }
 
 /*~ If you want to expose types from your module as well, you can
  *~ place them in this block.
  */
-declare namespace Core {
+declare namespace RPCClient {
     export interface Config {
         endpoint: string;
         apiVersion: string;
