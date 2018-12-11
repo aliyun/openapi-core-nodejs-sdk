@@ -1,12 +1,12 @@
 {
   "name": "@alicloud/pop-core",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "AliCloud POP SDK core",
   "main": "index.js",
   "types": "lib/core.d.ts",
   "scripts": {
     "lint": "eslint --fix lib",
-    "test": "mocha --reporter spec test/*.test.js",
+    "test": "mocha -R spec test/*.test.js",
     "test-cov": "nyc -r=html -r=text -r=lcov mocha -t 3000 -R spec test/*.test.js",
     "ci": "npm run lint && npm run test-cov && codecov"
   },
