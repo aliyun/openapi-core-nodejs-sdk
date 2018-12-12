@@ -44,6 +44,9 @@
   "directories": {
     "test": "test"
   },
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aliyun/openapi-core-nodejs-sdk.git"

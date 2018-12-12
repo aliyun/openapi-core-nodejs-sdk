@@ -5,3 +5,4 @@ test/config.js
 demo.js
 .nyc_output/
 .DS_Store
+.env
