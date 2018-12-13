@@ -3,7 +3,7 @@
   "version": "1.7.3",
   "description": "AliCloud POP SDK core",
   "main": "index.js",
-  "types": "lib/core.d.ts",
+  "types": "lib/rpc.d.ts",
   "scripts": {
     "lint": "eslint --fix lib test",
     "test": "mocha -R spec test/*.test.js",
