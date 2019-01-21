@@ -8,6 +8,7 @@
     "lint": "eslint --fix lib test",
     "test": "mocha -R spec test/*.test.js",
     "test-cov": "nyc -r=html -r=text -r=lcov mocha -t 3000 -R spec test/*.test.js",
+    "test-integration": "mocha -R spec test/*.integration.js",
     "ci": "npm run lint && npm run test-cov && codecov"
   },
   "keywords": [
