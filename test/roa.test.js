@@ -105,7 +105,6 @@ describe('roa core', function() {
         }
       });
     });
-
   });
 
   describe('request', function () {
@@ -117,17 +116,27 @@ describe('roa core', function() {
     });
 
     it('request', async function () {
-      var result = await client.request('GET', '/regions');
+      this.timeout(10000);
+      var result = await client.request('GET', '/regions', {}, '', {}, {
+        timeout: 10000
+      });
       expect(result).to.have.property('Regions');
     });
 
     it('get should ok', async function () {
-      var result = await client.get('/regions');
+      this.timeout(10000);
+      var result = await client.get('/regions', {}, {}, {
+        timeout: 10000
+      });
       expect(result).to.have.property('Regions');
     });
 
     it('get raw body should ok', async function () {
-      var opts = {rawBody: true};
+      this.timeout(10000);
+      var opts = {
+        rawBody: true,
+        timeout: 10000
+      };
       var result = await client.get('/regions', {}, {}, opts);
       expect(result).to.be.a('string');
     });
