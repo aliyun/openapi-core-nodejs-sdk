@@ -184,13 +184,16 @@ describe('rpc core', function() {
     });
 
     it('should ok', async function() {
+      this.timeout(10000);
+
       var params = {
         key: ['1', '2', '3', '4', '5', '6', '7', '8', '9',
           '10', '11']
       };
 
       var requestOption = {
-        method: 'POST'
+        method: 'POST',
+        timeout: 10000
       };
 
       const result = await client.request('DescribeRegions', params, requestOption);
@@ -199,12 +202,15 @@ describe('rpc core', function() {
     });
 
     it('should ok with repeat list less 10 item', async function() {
+      this.timeout(10000);
+
       var params = {
         key: ['1', '2', '3', '4', '5', '6', '7', '8', '9']
       };
 
       var requestOption = {
-        method: 'POST'
+        method: 'POST',
+        timeout: 10000
       };
 
       const result = await client.request('DescribeRegions', params, requestOption);
