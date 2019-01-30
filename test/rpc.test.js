@@ -2,6 +2,8 @@
 
 const expect = require('expect.js');
 const rewire = require('rewire');
+const httpx = require('httpx');
+const muk = require('muk');
 
 const RPCClient = require('../lib/rpc');
 
@@ -52,6 +54,225 @@ describe('rpc core', function() {
           accessKeyId: 'accessKeyId'
         });
       }).to.throwException(/must pass "config\.accessKeySecret"/);
+    });
+
+    it('should ok with http endpoint', function() {
+      const client = new RPCClient({
+        endpoint: 'http://ecs.aliyuncs.com',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret'
+      });
+      expect(client.endpoint).to.be('http://ecs.aliyuncs.com');
+      expect(client.keepAliveAgent.protocol).to.be('http:');
+    });
+
+    it('should ok with https endpoint', function() {
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret'
+      });
+      expect(client.endpoint).to.be('https://ecs.aliyuncs.com');
+      expect(client.keepAliveAgent.protocol).to.be('https:');
+    });
+
+    it('should ok with codes', function() {
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+        codes: ['True']
+      });
+      expect(client.codes.has('True')).to.be.ok();
+    });
+  });
+
+  describe('_buildParams', function() {
+    it('should ok', function () {
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret'
+      });
+      const defaults = client._buildParams();
+      expect(defaults).to.only.have.keys('Format', 'SignatureMethod',
+        'SignatureNonce', 'SignatureVersion', 'Timestamp', 'AccessKeyId',
+        'Version');
+    });
+
+    it('should ok with securityToken', function () {
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+        securityToken: 'securityToken'
+      });
+      const defaults = client._buildParams();
+      expect(defaults).to.only.have.keys('Format', 'SignatureMethod',
+        'SignatureNonce', 'SignatureVersion', 'Timestamp', 'AccessKeyId',
+        'Version', 'SecurityToken');
+    });
+  });
+
+  function mock(response, body) {
+    before(function() {
+      muk(httpx, 'request', function(url, opts) {
+        return Promise.resolve(response);
+      });
+
+      muk(httpx, 'read', function(response, encoding) {
+        return Promise.resolve(body);
+      });
+    });
+
+    after(function () {
+      muk.restore();
+    });
+  }
+
+  describe('request', function () {
+    mock({
+      req: {
+        _headers: {}
+      }
+    }, '{}');
+
+    it('get with raw body should ok', async function () {
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+      });
+      const result = await client.request('action', {});
+      expect(result).to.be.eql({});
+    });
+  });
+
+  describe('request with post', function () {
+    mock({
+      req: {
+        _headers: {}
+      },
+      statusCode: 200,
+      headers: {}
+    }, '{}');
+
+    it('should ok', async function () {
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+      });
+      const result = await client.request('action');
+      expect(result).to.be.eql({});
+    });
+
+    it('should ok with formatAction', async function () {
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+      });
+      const result = await client.request('action', {}, {
+        formatAction: false
+      });
+      expect(result).to.be.eql({});
+    });
+
+    it('should ok with formatParams', async function () {
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+      });
+      const result = await client.request('action', {}, {
+        formatParams: false
+      });
+      expect(result).to.be.eql({});
+    });
+
+    it('should ok with formatParams', async function () {
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+      });
+      const result = await client.request('action', {}, {
+        agent: new require('https').Agent({
+          keepAlive: true,
+          keepAliveMsecs: 3000
+        })
+      });
+      expect(result).to.be.eql({});
+    });
+
+    it('get with raw body should ok', async function () {
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+      });
+      const result = await client.request('action', {}, {
+        method: 'POST'
+      });
+      expect(result).to.be.eql({});
+    });
+
+    it('get with verbose should ok', async function () {
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret'
+      }, true);
+      const [json, entry] = await client.request('action', {}, {});
+      expect(json).to.be.eql({});
+      expect(entry.request).to.be.eql({
+        headers: {}
+      });
+      expect(entry.response).to.be.eql({
+        statusCode: 200,
+        headers: {}
+      });
+    });
+  });
+
+  describe('request with error', function () {
+    mock({
+      req: {
+        _headers: {}
+      }
+    }, JSON.stringify({
+      Code: '400',
+      Message: 'error message'
+    }));
+
+    it('request with 400 should ok', async function () {
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+      });
+      try {
+        await client.request('action', {});
+      } catch (ex) {
+        expect(ex.message.startsWith('error message, URL: ')).to.be.ok();
+        return;
+      }
+      // should never be executed
+      expect(false).to.be.ok();
     });
   });
 
