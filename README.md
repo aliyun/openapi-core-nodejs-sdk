@@ -118,5 +118,30 @@ client.request(action, params, {
 
 When both ways are used, opts will be merged. But for the opt with the same key, the opts provided by the function parameter overrides the opts provided by the constructor.
 
+### Http Proxy Support
+
+```js
+var tunnel = require('tunnel-agent');
+
+var RPCClient = require('@alicloud/pop-core').RPCClient;
+
+var client = new RPCClient({
+  accessKeyId: '<accessKeyId>',
+  accessKeySecret: '<accessKeySecret>',
+  endpoint: '<endpoint>',
+  apiVersion: '<apiVersion>'
+});
+
+
+client.request(action, params, {
+  agent: tunnel.httpOverHttp({
+    proxy: {
+      host: 'host',
+      port: port
+    }
+  });
+});
+```
+
 ## License
 The MIT License
