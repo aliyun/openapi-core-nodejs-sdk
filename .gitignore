@@ -4,3 +4,4 @@ test/config.js
 .idea/
 demo.js
 .nyc_output/
+.DS_Store
