@@ -251,7 +251,7 @@ describe('roa core', function() {
         await client.request('GET', '/');
       } catch (ex) {
         expect(ex.message).to.be('code: 400, error message, requestid: requestid');
-        expect(ex.name).to.be('ROAError');
+        expect(ex.name).to.be('errorcodeError');
         expect(ex.statusCode).to.be(400);
         expect(ex.code).to.be('errorcode');
         return;
@@ -284,7 +284,7 @@ describe('roa core', function() {
         await client.request('GET', '/');
       } catch (ex) {
         expect(ex.message).to.be('code: 400, RAM/STS verification error, requestid: ');
-        expect(ex.name).to.be('ROAError');
+        expect(ex.name).to.be('10007Error');
         expect(ex.statusCode).to.be(400);
         expect(ex.code).to.be(10007);
         return;
@@ -314,7 +314,7 @@ describe('roa core', function() {
         await client.request('GET', '/');
       } catch (ex) {
         expect(ex.message).to.be('parse response to json error');
-        expect(ex.name).to.be('ROAError');
+        expect(ex.name).to.be('FormatError');
         return;
       }
       // should never be executed
