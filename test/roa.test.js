@@ -250,7 +250,71 @@ describe('roa core', function() {
       try {
         await client.request('GET', '/');
       } catch (ex) {
-        expect(ex.message).to.be('code: 400, error message requestid: requestid');
+        expect(ex.message).to.be('code: 400, error message, requestid: requestid');
+        expect(ex.name).to.be('errorcodeError');
+        expect(ex.statusCode).to.be(400);
+        expect(ex.code).to.be('errorcode');
+        return;
+      }
+      // should never be executed
+      expect(false).to.be.ok();
+    });
+  });
+
+  describe('request(400) with json response and errorMsg should ok', function () {
+    mock({
+      statusCode: 400,
+      headers: {
+        'content-type': 'application/json'
+      }
+    }, JSON.stringify({
+      'errorMsg': 'RAM/STS verification error',
+      'errorCode': 10007
+    }));
+
+    it('json response should ok', async function () {
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+        securityToken: 'securityToken'
+      });
+      try {
+        await client.request('GET', '/');
+      } catch (ex) {
+        expect(ex.message).to.be('code: 400, RAM/STS verification error, requestid: ');
+        expect(ex.name).to.be('10007Error');
+        expect(ex.statusCode).to.be(400);
+        expect(ex.code).to.be(10007);
+        return;
+      }
+      // should never be executed
+      expect(false).to.be.ok();
+    });
+  });
+
+  describe('request with unexpect json string response should ok', function () {
+    mock({
+      statusCode: 400,
+      headers: {
+        'content-type': 'application/json'
+      }
+    }, '{foo:bar}');
+
+    it('json response should ok', async function () {
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+        securityToken: 'securityToken'
+      });
+      try {
+        await client.request('GET', '/');
+      } catch (ex) {
+        expect(ex.message).to.be('parse response to json error');
+        expect(ex.name).to.be('FormatError');
         return;
       }
       // should never be executed
