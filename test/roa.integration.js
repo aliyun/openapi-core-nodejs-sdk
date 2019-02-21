@@ -38,3 +38,32 @@ describe('roa request', function () {
     expect(result).to.be.a('string');
   });
 });
+
+describe('nlp', function () {
+  var client = new ROAClient({
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    accessKeySecret: process.env.ACCESS_KEY_SECRET,
+    endpoint: 'http://nlp.cn-shanghai.aliyuncs.com',
+    apiVersion: '2018-04-08',
+  });
+
+  it('translate should ok', async function () {
+    const params = {
+      q: '你好',
+      source: 'zh',
+      target: 'en',
+      format: 'text',
+    };
+
+    const res = await client.request(
+      'POST',
+      '/nlp/api/translate/standard',
+      {},
+      JSON.stringify(params),
+      { 'Content-Type': 'application/json' }
+    );
+
+    expect(res).to.be.ok();
+    expect(res.data).to.be.ok();
+  });
+});

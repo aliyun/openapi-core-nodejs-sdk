@@ -502,6 +502,13 @@ describe('roa core', function() {
       expect(filter('he\f\fllo')).to.be('he  llo');
     });
 
+    it('keyLowerify should ok', function () {
+      const keyLowerify = roa.__get__('keyLowerify');
+      expect(keyLowerify({})).to.be.eql({});
+      expect(keyLowerify({'low': 'value'})).to.be.eql({'low': 'value'});
+      expect(keyLowerify({'Low': 'value'})).to.be.eql({'low': 'value'});
+    });
+
     it('parseXML should ok', async function () {
       const parseXML = roa.__get__('parseXML');
       try {
