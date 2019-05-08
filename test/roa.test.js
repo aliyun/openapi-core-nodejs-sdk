@@ -91,10 +91,12 @@ describe('roa core', function() {
     const headers = client.buildHeaders();
     expect(headers).to.only.have.keys('accept', 'date', 'host',
       'x-acs-signature-nonce', 'x-acs-signature-method',
-      'x-acs-signature-version', 'x-acs-version', 'x-sdk-client');
+      'x-acs-signature-version', 'x-acs-version', 'x-sdk-client',
+      'user-agent');
     expect(headers).to.have.property('accept', 'application/json');
     expect(headers.date).to.match(/[A-Z][a-z]{2}, \d{2} [A-Z][a-z]{2} \d{4} \d{2}:\d{2}:\d{2} GMT/);
     expect(headers).to.have.property('host', 'ecs.aliyuncs.com');
+    expect(headers['user-agent'].startsWith('AlibabaCloud')).to.be.ok();
   });
 
   it('buildHeaders should ok with securityToken', function () {
@@ -109,10 +111,11 @@ describe('roa core', function() {
     expect(headers).to.only.have.keys('accept', 'date', 'host',
       'x-acs-signature-nonce', 'x-acs-signature-method',
       'x-acs-signature-version', 'x-acs-version', 'x-sdk-client',
-      'x-acs-accesskey-id', 'x-acs-security-token');
+      'x-acs-accesskey-id', 'x-acs-security-token', 'user-agent');
     expect(headers).to.have.property('accept', 'application/json');
     expect(headers.date).to.match(/[A-Z][a-z]{2}, \d{2} [A-Z][a-z]{2} \d{4} \d{2}:\d{2}:\d{2} GMT/);
     expect(headers).to.have.property('host', 'ecs.aliyuncs.com');
+    expect(headers['user-agent'].startsWith('AlibabaCloud')).to.be.ok();
   });
 
   it('signature should ok', function () {
