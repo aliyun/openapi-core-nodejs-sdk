@@ -1,6 +1,6 @@
 {
   "name": "@alicloud/pop-core",
-  "version": "1.7.5",
+  "version": "1.7.7",
   "description": "AliCloud POP SDK core",
   "main": "index.js",
   "types": "lib/rpc.d.ts",
@@ -34,7 +34,7 @@
   ],
   "devDependencies": {
     "codecov": "^3.0.4",
-    "eslint": "^3.13.0",
+    "eslint": "^6.6.0",
     "expect.js": "^0.3.1",
     "mocha": "^4",
     "muk": "^0.5.3",

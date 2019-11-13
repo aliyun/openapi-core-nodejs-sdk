@@ -91,10 +91,12 @@ describe('roa core', function() {
     const headers = client.buildHeaders();
     expect(headers).to.only.have.keys('accept', 'date', 'host',
       'x-acs-signature-nonce', 'x-acs-signature-method',
-      'x-acs-signature-version', 'x-acs-version', 'x-sdk-client');
+      'x-acs-signature-version', 'x-acs-version', 'x-sdk-client',
+      'user-agent');
     expect(headers).to.have.property('accept', 'application/json');
     expect(headers.date).to.match(/[A-Z][a-z]{2}, \d{2} [A-Z][a-z]{2} \d{4} \d{2}:\d{2}:\d{2} GMT/);
     expect(headers).to.have.property('host', 'ecs.aliyuncs.com');
+    expect(headers['user-agent'].startsWith('AlibabaCloud')).to.be.ok();
   });
 
   it('buildHeaders should ok with securityToken', function () {
@@ -109,10 +111,11 @@ describe('roa core', function() {
     expect(headers).to.only.have.keys('accept', 'date', 'host',
       'x-acs-signature-nonce', 'x-acs-signature-method',
       'x-acs-signature-version', 'x-acs-version', 'x-sdk-client',
-      'x-acs-accesskey-id', 'x-acs-security-token');
+      'x-acs-accesskey-id', 'x-acs-security-token', 'user-agent');
     expect(headers).to.have.property('accept', 'application/json');
     expect(headers.date).to.match(/[A-Z][a-z]{2}, \d{2} [A-Z][a-z]{2} \d{4} \d{2}:\d{2}:\d{2} GMT/);
     expect(headers).to.have.property('host', 'ecs.aliyuncs.com');
+    expect(headers['user-agent'].startsWith('AlibabaCloud')).to.be.ok();
   });
 
   it('signature should ok', function () {
@@ -250,7 +253,71 @@ describe('roa core', function() {
       try {
         await client.request('GET', '/');
       } catch (ex) {
-        expect(ex.message).to.be('code: 400, error message requestid: requestid');
+        expect(ex.message).to.be('code: 400, error message, requestid: requestid');
+        expect(ex.name).to.be('errorcodeError');
+        expect(ex.statusCode).to.be(400);
+        expect(ex.code).to.be('errorcode');
+        return;
+      }
+      // should never be executed
+      expect(false).to.be.ok();
+    });
+  });
+
+  describe('request(400) with json response and errorMsg should ok', function () {
+    mock({
+      statusCode: 400,
+      headers: {
+        'content-type': 'application/json'
+      }
+    }, JSON.stringify({
+      'errorMsg': 'RAM/STS verification error',
+      'errorCode': 10007
+    }));
+
+    it('json response should ok', async function () {
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+        securityToken: 'securityToken'
+      });
+      try {
+        await client.request('GET', '/');
+      } catch (ex) {
+        expect(ex.message).to.be('code: 400, RAM/STS verification error, requestid: ');
+        expect(ex.name).to.be('10007Error');
+        expect(ex.statusCode).to.be(400);
+        expect(ex.code).to.be(10007);
+        return;
+      }
+      // should never be executed
+      expect(false).to.be.ok();
+    });
+  });
+
+  describe('request with unexpect json string response should ok', function () {
+    mock({
+      statusCode: 400,
+      headers: {
+        'content-type': 'application/json'
+      }
+    }, '{foo:bar}');
+
+    it('json response should ok', async function () {
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        accessKeyId: 'accessKeyId',
+        accessKeySecret: 'accessKeySecret',
+        securityToken: 'securityToken'
+      });
+      try {
+        await client.request('GET', '/');
+      } catch (ex) {
+        expect(ex.message).to.be('parse response to json error');
+        expect(ex.name).to.be('FormatError');
         return;
       }
       // should never be executed
@@ -436,6 +503,13 @@ describe('roa core', function() {
       expect(filter('he\n\nllo')).to.be('he  llo');
       expect(filter('he\r\rllo')).to.be('he  llo');
       expect(filter('he\f\fllo')).to.be('he  llo');
+    });
+
+    it('keyLowerify should ok', function () {
+      const keyLowerify = roa.__get__('keyLowerify');
+      expect(keyLowerify({})).to.be.eql({});
+      expect(keyLowerify({'low': 'value'})).to.be.eql({'low': 'value'});
+      expect(keyLowerify({'Low': 'value'})).to.be.eql({'low': 'value'});
     });
 
     it('parseXML should ok', async function () {
