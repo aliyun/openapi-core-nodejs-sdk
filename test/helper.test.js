@@ -15,6 +15,7 @@ function removeEnvValues(){
 }
 
 describe('helper', function() {
+  removeEnvValues();
   describe('RPCClient config', function() {
     it('should pass into "config"', function() {
       expect(function () {
