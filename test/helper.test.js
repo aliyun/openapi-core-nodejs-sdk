@@ -46,13 +46,13 @@ describe('helper', function() {
       }).to.throwException(/"config\.endpoint" must starts with 'https:\/\/' or 'http:\/\/'\./);
     });
 
-    it('should not overwrite "config.endpoint"', function() {
+    it('should also overwrite "config.endpoint"', function() {
       process.env['ALICLOUD_ENDPOINT'] = 'http://ecs.aliyuncs.com/';
       expect(function () {
         new RPCClient({
           endpoint: 'ecs.aliyuncs.com/'
         });
-      }).to.throwException(/"config\.endpoint" must starts with 'https:\/\/' or 'http:\/\/'\./);
+      }).to.throwException(new RegExp(util.format(ASSERT_WARNING, '"config.apiVersion"')));
       //cleanup
       removeEnvValues();
     });
@@ -96,14 +96,18 @@ describe('helper', function() {
     });
 
     it('should ok with http endpoint', function() {
+      process.env['ALICLOUD_API_VERSION'] = '2.0';
       const client = new RPCClient({
         endpoint: 'http://ecs.aliyuncs.com',
         apiVersion: '1.0',
         accessKeyId: 'accessKeyId',
         accessKeySecret: 'accessKeySecret'
       });
+      expect(client.apiVersion).to.be(process.env['ALICLOUD_API_VERSION']);
       expect(client.endpoint).to.be('http://ecs.aliyuncs.com');
       expect(client.keepAliveAgent.protocol).to.be('http:');
+      //cleanup
+      removeEnvValues();
     });
 
     it('should ok with https endpoint', function() {
@@ -115,6 +119,20 @@ describe('helper', function() {
       });
       expect(client.endpoint).to.be('https://ecs.aliyuncs.com');
       expect(client.keepAliveAgent.protocol).to.be('https:');
+    });
+
+    it('should fail because overritten with wrong endpoint', function() {
+      process.env['ALICLOUD_ENDPOINT'] = 'ecs.aliyuncs.com/';
+      expect(function () {
+        new RPCClient({
+          endpoint: 'http://ecs.aliyuncs.com/',
+          apiVersion: '1.0',
+          accessKeyId: 'accessKeyId',
+          accessKeySecret: 'accessKeySecret'
+        });
+      }).to.throwException(/"config\.endpoint" must starts with 'https:\/\/' or 'http:\/\/'\./);
+      //cleanup
+      removeEnvValues();
     });
   });
 });
