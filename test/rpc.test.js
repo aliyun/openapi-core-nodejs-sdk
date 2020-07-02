@@ -122,6 +122,9 @@ describe('rpc core', function() {
   function mock(response, body) {
     before(function() {
       muk(httpx, 'request', function(url, opts) {
+        response.req.getHeaders = function () {
+          return response.req._headers;
+        };
         return Promise.resolve(response);
       });
 
