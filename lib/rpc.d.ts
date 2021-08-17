@@ -38,6 +38,7 @@ declare namespace RPCClient {
         apiVersion: string;
         accessKeyId: string;
         accessKeySecret: string;
+        securityToken?: string;
         codes?: (string | number)[];
         opts?: object;
     }
