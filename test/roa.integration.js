@@ -8,7 +8,7 @@ describe('roa request', function () {
   var client = new ROAClient({
     accessKeyId: process.env.ACCESS_KEY_ID,
     accessKeySecret: process.env.ACCESS_KEY_SECRET,
-    endpoint: 'http://ros.aliyuncs.com',
+    endpoint: 'http://ros.aliyuncs.com:80',
     apiVersion: '2015-09-01'
   });
 
