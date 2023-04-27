@@ -7,21 +7,21 @@ const muk = require('muk');
 
 const ROAClient = require('../lib/roa');
 
-describe('roa core', function() {
+describe('roa core', function () {
   describe('ROAClient', function () {
-    it('should pass into "config"', function() {
+    it('should pass into "config"', function () {
       expect(function () {
         new ROAClient();
       }).to.throwException(/must pass "config"/);
     });
 
-    it('should pass into "config.endpoint"', function() {
+    it('should pass into "config.endpoint"', function () {
       expect(function () {
         new ROAClient({});
       }).to.throwException(/must pass "config\.endpoint"/);
     });
 
-    it('should pass into valid "config.endpoint"', function() {
+    it('should pass into valid "config.endpoint"', function () {
       expect(function () {
         new ROAClient({
           endpoint: 'ecs.aliyuncs.com/'
@@ -29,7 +29,7 @@ describe('roa core', function() {
       }).to.throwException(/"config\.endpoint" must starts with 'https:\/\/' or 'http:\/\/'\./);
     });
 
-    it('should pass into "config.apiVersion"', function() {
+    it('should pass into "config.apiVersion"', function () {
       expect(function () {
         new ROAClient({
           endpoint: 'http://ecs.aliyuncs.com/'
@@ -37,7 +37,7 @@ describe('roa core', function() {
       }).to.throwException(/must pass "config\.apiVersion"/);
     });
 
-    it('should pass into "config.accessKeyId"', function() {
+    it('should pass into "config.accessKeyId"', function () {
       expect(function () {
         new ROAClient({
           endpoint: 'http://ecs.aliyuncs.com/',
@@ -46,7 +46,7 @@ describe('roa core', function() {
       }).to.throwException(/must pass "config\.accessKeyId"/);
     });
 
-    it('should pass into "config.accessKeySecret"', function() {
+    it('should pass into "config.accessKeySecret"', function () {
       expect(function () {
         new ROAClient({
           endpoint: 'http://ecs.aliyuncs.com/',
@@ -56,7 +56,7 @@ describe('roa core', function() {
       }).to.throwException(/must pass "config\.accessKeySecret"/);
     });
 
-    it('should ok with http protocol', function() {
+    it('should ok with http protocol', function () {
       const client = new ROAClient({
         endpoint: 'http://ecs.aliyuncs.com/',
         apiVersion: '1.0',
@@ -68,7 +68,7 @@ describe('roa core', function() {
       expect(client.keepAliveAgent).to.have.property('protocol', 'http:');
     });
 
-    it('should ok with https protocol', function() {
+    it('should ok with https protocol', function () {
       const client = new ROAClient({
         endpoint: 'https://ecs.aliyuncs.com/',
         apiVersion: '1.0',
@@ -143,12 +143,12 @@ describe('roa core', function() {
   });
 
   function mock(response, body) {
-    before(function() {
-      muk(httpx, 'request', function(url, opts) {
+    before(function () {
+      muk(httpx, 'request', function (url, opts) {
         return Promise.resolve(response);
       });
 
-      muk(httpx, 'read', function(response, encoding) {
+      muk(httpx, 'read', function (response, encoding) {
         return Promise.resolve(body);
       });
     });
@@ -169,7 +169,7 @@ describe('roa core', function() {
         accessKeySecret: 'accessKeySecret',
         securityToken: 'securityToken'
       });
-      const result = await client.request('GET', '/', {}, '', {}, {rawBody: true});
+      const result = await client.request('GET', '/', {}, '', {}, { rawBody: true });
       expect(result).to.be('raw body');
     });
 
@@ -181,7 +181,7 @@ describe('roa core', function() {
         accessKeySecret: 'accessKeySecret',
         securityToken: 'securityToken'
       });
-      const result = await client.get('/', {}, {}, {rawBody: true});
+      const result = await client.get('/', {}, {}, { rawBody: true });
       expect(result).to.be('raw body');
     });
   });
@@ -192,7 +192,7 @@ describe('roa core', function() {
       headers: {
         'content-type': 'application/json'
       }
-    }, JSON.stringify({'ok': true}));
+    }, JSON.stringify({ 'ok': true }));
 
     it('json response should ok', async function () {
       const client = new ROAClient({
@@ -424,7 +424,7 @@ describe('roa core', function() {
       headers: {
         'content-type': 'application/json'
       }
-    }, JSON.stringify({'ok': true}));
+    }, JSON.stringify({ 'ok': true }));
 
     it('should ok', async function () {
       const client = new ROAClient({
@@ -435,7 +435,7 @@ describe('roa core', function() {
         securityToken: 'securityToken'
       });
       const result = await client.post('/', {}, 'text', {}, {});
-      expect(result).to.be.eql({'ok': true});
+      expect(result).to.be.eql({ 'ok': true });
     });
 
     it('should ok with query', async function () {
@@ -446,8 +446,8 @@ describe('roa core', function() {
         accessKeySecret: 'accessKeySecret',
         securityToken: 'securityToken'
       });
-      const result = await client.post('/', {'k': 'v'}, 'text', {}, {});
-      expect(result).to.be.eql({'ok': true});
+      const result = await client.post('/', { 'k': 'v' }, 'text', {}, {});
+      expect(result).to.be.eql({ 'ok': true });
     });
   });
 
@@ -457,7 +457,7 @@ describe('roa core', function() {
       headers: {
         'content-type': 'application/json'
       }
-    }, JSON.stringify({'ok': true}));
+    }, JSON.stringify({ 'ok': true }));
 
     it('should ok', async function () {
       const client = new ROAClient({
@@ -468,7 +468,7 @@ describe('roa core', function() {
         securityToken: 'securityToken'
       });
       const result = await client.put('/', {}, 'text', {}, {});
-      expect(result).to.be.eql({'ok': true});
+      expect(result).to.be.eql({ 'ok': true });
     });
   });
 
@@ -478,7 +478,7 @@ describe('roa core', function() {
       headers: {
         'content-type': 'application/json'
       }
-    }, JSON.stringify({'ok': true}));
+    }, JSON.stringify({ 'ok': true }));
 
     it('should ok', async function () {
       const client = new ROAClient({
@@ -489,7 +489,7 @@ describe('roa core', function() {
         securityToken: 'securityToken'
       });
       const result = await client.delete('/', {}, {}, {});
-      expect(result).to.be.eql({'ok': true});
+      expect(result).to.be.eql({ 'ok': true });
     });
   });
 
@@ -508,8 +508,8 @@ describe('roa core', function() {
     it('keyLowerify should ok', function () {
       const keyLowerify = roa.__get__('keyLowerify');
       expect(keyLowerify({})).to.be.eql({});
-      expect(keyLowerify({'low': 'value'})).to.be.eql({'low': 'value'});
-      expect(keyLowerify({'Low': 'value'})).to.be.eql({'low': 'value'});
+      expect(keyLowerify({ 'low': 'value' })).to.be.eql({ 'low': 'value' });
+      expect(keyLowerify({ 'Low': 'value' })).to.be.eql({ 'low': 'value' });
     });
 
     it('parseXML should ok', async function () {
@@ -554,21 +554,21 @@ describe('roa core', function() {
     it('getCanonicalizedHeaders should ok', function () {
       const getCanonicalizedHeaders = roa.__get__('getCanonicalizedHeaders');
       expect(getCanonicalizedHeaders({})).to.be('');
-      expect(getCanonicalizedHeaders({key: 'value'})).to.be('');
-      expect(getCanonicalizedHeaders({'x-acs-key': 'value'})).to.be('x-acs-key:value\n');
+      expect(getCanonicalizedHeaders({ key: 'value' })).to.be('');
+      expect(getCanonicalizedHeaders({ 'x-acs-key': 'value' })).to.be('x-acs-key:value\n');
     });
 
     it('getCanonicalizedResource should ok', function () {
       const getCanonicalizedResource = roa.__get__('getCanonicalizedResource');
       expect(getCanonicalizedResource('/', {})).to.be('/');
-      expect(getCanonicalizedResource('/', {key: 'value'})).to.be('/?key=value');
-      const q = {key: 'value', 'key1': 'value2'};
+      expect(getCanonicalizedResource('/', { key: 'value' })).to.be('/?key=value');
+      const q = { key: 'value', 'key1': 'value2' };
       expect(getCanonicalizedResource('/', q)).to.be('/?key=value&key1=value2');
     });
 
     it('buildStringToSign should ok', function () {
       const buildStringToSign = roa.__get__('buildStringToSign');
-      expect(buildStringToSign('GET', '/', {'accept': 'application/json'}, {}))
+      expect(buildStringToSign('GET', '/', { 'accept': 'application/json' }, {}))
         .to.be('GET\napplication/json\n\n\n\n/');
       const headers = {
         'accept': 'application/json',
