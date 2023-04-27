@@ -7,21 +7,21 @@ const muk = require('muk');
 
 const RPCClient = require('../lib/rpc');
 
-describe('rpc core', function() {
-  describe('RPCClient', function() {
-    it('should pass into "config"', function() {
+describe('rpc core', function () {
+  describe('RPCClient', function () {
+    it('should pass into "config"', function () {
       expect(function () {
         new RPCClient();
       }).to.throwException(/must pass "config"/);
     });
 
-    it('should pass into "config.endpoint"', function() {
+    it('should pass into "config.endpoint"', function () {
       expect(function () {
         new RPCClient({});
       }).to.throwException(/must pass "config\.endpoint"/);
     });
 
-    it('should pass into valid "config.endpoint"', function() {
+    it('should pass into valid "config.endpoint"', function () {
       expect(function () {
         new RPCClient({
           endpoint: 'ecs.aliyuncs.com/'
@@ -29,7 +29,7 @@ describe('rpc core', function() {
       }).to.throwException(/"config\.endpoint" must starts with 'https:\/\/' or 'http:\/\/'\./);
     });
 
-    it('should pass into "config.apiVersion"', function() {
+    it('should pass into "config.apiVersion"', function () {
       expect(function () {
         new RPCClient({
           endpoint: 'http://ecs.aliyuncs.com/'
@@ -37,7 +37,7 @@ describe('rpc core', function() {
       }).to.throwException(/must pass "config\.apiVersion"/);
     });
 
-    it('should pass into "config.accessKeyId"', function() {
+    it('should pass into "config.accessKeyId"', function () {
       expect(function () {
         new RPCClient({
           endpoint: 'http://ecs.aliyuncs.com/',
@@ -46,7 +46,7 @@ describe('rpc core', function() {
       }).to.throwException(/must pass "config\.accessKeyId"/);
     });
 
-    it('should pass into "config.accessKeySecret"', function() {
+    it('should pass into "config.accessKeySecret"', function () {
       expect(function () {
         new RPCClient({
           endpoint: 'http://ecs.aliyuncs.com/',
@@ -56,7 +56,7 @@ describe('rpc core', function() {
       }).to.throwException(/must pass "config\.accessKeySecret"/);
     });
 
-    it('should ok with http endpoint', function() {
+    it('should ok with http endpoint', function () {
       const client = new RPCClient({
         endpoint: 'http://ecs.aliyuncs.com',
         apiVersion: '1.0',
@@ -67,7 +67,7 @@ describe('rpc core', function() {
       expect(client.keepAliveAgent.protocol).to.be('http:');
     });
 
-    it('should ok with https endpoint', function() {
+    it('should ok with https endpoint', function () {
       const client = new RPCClient({
         endpoint: 'https://ecs.aliyuncs.com/',
         apiVersion: '1.0',
@@ -78,7 +78,7 @@ describe('rpc core', function() {
       expect(client.keepAliveAgent.protocol).to.be('https:');
     });
 
-    it('should ok with codes', function() {
+    it('should ok with codes', function () {
       const client = new RPCClient({
         endpoint: 'https://ecs.aliyuncs.com/',
         apiVersion: '1.0',
@@ -90,7 +90,7 @@ describe('rpc core', function() {
     });
   });
 
-  describe('_buildParams', function() {
+  describe('_buildParams', function () {
     it('should ok', function () {
       const client = new RPCClient({
         endpoint: 'https://ecs.aliyuncs.com/',
@@ -120,15 +120,15 @@ describe('rpc core', function() {
   });
 
   function mock(response, body) {
-    before(function() {
-      muk(httpx, 'request', function(url, opts) {
+    before(function () {
+      muk(httpx, 'request', function (url, opts) {
         response.req.getHeaders = function () {
           return response.req._headers;
         };
         return Promise.resolve(response);
       });
 
-      muk(httpx, 'read', function(response, encoding) {
+      muk(httpx, 'read', function (response, encoding) {
         return Promise.resolve(body);
       });
     });
@@ -289,7 +289,7 @@ describe('rpc core', function() {
 
     it('formatParams should ok', function () {
       const formatParams = rpc.__get__('formatParams');
-      expect(formatParams({'hello': 'world'})).to.be.eql({
+      expect(formatParams({ 'hello': 'world' })).to.be.eql({
         Hello: 'world'
       });
     });
@@ -328,7 +328,7 @@ describe('rpc core', function() {
     it('flatParams should ok', function () {
       const flatParams = rpc.__get__('flatParams');
       expect(flatParams({})).to.be.eql({});
-      expect(flatParams({key: ['value']})).to.be.eql({
+      expect(flatParams({ key: ['value'] })).to.be.eql({
         'key.1': 'value'
       });
       expect(flatParams({
@@ -350,7 +350,7 @@ describe('rpc core', function() {
     it('normalize should ok', function () {
       const normalize = rpc.__get__('normalize');
       expect(normalize({})).to.be.eql([]);
-      expect(normalize({key: ['value']})).to.be.eql([
+      expect(normalize({ key: ['value'] })).to.be.eql([
         ['key.1', 'value']
       ]);
       expect(normalize({
