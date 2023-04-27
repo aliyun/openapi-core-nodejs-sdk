@@ -4,7 +4,7 @@ const expect = require('expect.js');
 
 const RPCClient = require('../lib/rpc');
 
-describe('rpc request', function() {
+describe('rpc request', function () {
   var client = new RPCClient({
     accessKeyId: process.env.ACCESS_KEY_ID,
     accessKeySecret: process.env.ACCESS_KEY_SECRET,
@@ -12,7 +12,7 @@ describe('rpc request', function() {
     apiVersion: '2014-05-26'
   });
 
-  it('should ok', async function() {
+  it('should ok', async function () {
     this.timeout(15000);
 
     var params = {
@@ -30,7 +30,7 @@ describe('rpc request', function() {
     expect(result).to.have.key('Regions');
   });
 
-  it('should ok with repeat list less 10 item', async function() {
+  it('should ok with repeat list less 10 item', async function () {
     this.timeout(15000);
 
     var params = {
