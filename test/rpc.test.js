@@ -44,6 +44,13 @@ describe('rpc core', function () {
           apiVersion: '1.0'
         });
       }).to.throwException(/must pass "config\.accessKeyId"/);
+      expect(function () {
+        new RPCClient({
+          endpoint: 'http://ecs.aliyuncs.com/',
+          apiVersion: '1.0',
+          credentialsProvider: null
+        });
+      }).to.throwException(/must pass "config\.accessKeyId"/);
     });
 
     it('should pass into "config.accessKeySecret"', function () {
@@ -54,6 +61,19 @@ describe('rpc core', function () {
           accessKeyId: 'accessKeyId'
         });
       }).to.throwException(/must pass "config\.accessKeySecret"/);
+    });
+
+    it('should pass into "config.credentialsProvider" with getCredentials()', function () {
+      expect(function () {
+        new RPCClient({
+          endpoint: 'http://ecs.aliyuncs.com/',
+          apiVersion: '1.0',
+          credentialsProvider: {
+            accessKeyId: 'test',
+            accessKeySecret: 'test',
+          }
+        });
+      }).to.throwException(/must pass "config\.credentialsProvider" with function "getCredentials\(\)"/);
     });
 
     it('should ok with http endpoint', function () {
@@ -155,6 +175,24 @@ describe('rpc core', function () {
       const result = await client.request('action', {});
       expect(result).to.be.eql({});
     });
+
+    it('get with credentialsProvider should ok', async function () {
+      const provider = {
+        getCredentials: async () => {
+          return {
+            accessKeyId: 'accessKeyId',
+            accessKeySecret: 'accessKeySecret',
+          };
+        }
+      };
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        credentialsProvider: provider
+      });
+      const result = await client.request('action', {});
+      expect(result).to.be.eql({});
+    });
   });
 
   describe('request with post', function () {
@@ -172,6 +210,24 @@ describe('rpc core', function () {
         apiVersion: '1.0',
         accessKeyId: 'accessKeyId',
         accessKeySecret: 'accessKeySecret',
+      });
+      const result = await client.request('action');
+      expect(result).to.be.eql({});
+    });
+
+    it('should ok with credentialsProvider', async function () {
+      const provider = {
+        getCredentials: async () => {
+          return {
+            accessKeyId: 'accessKeyId',
+            accessKeySecret: 'accessKeySecret',
+          };
+        }
+      };
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        credentialsProvider: provider
       });
       const result = await client.request('action');
       expect(result).to.be.eql({});
@@ -203,7 +259,7 @@ describe('rpc core', function () {
       expect(result).to.be.eql({});
     });
 
-    it('should ok with formatParams', async function () {
+    it('should ok with keepAlive', async function () {
       const client = new RPCClient({
         endpoint: 'https://ecs.aliyuncs.com/',
         apiVersion: '1.0',
@@ -267,6 +323,30 @@ describe('rpc core', function () {
         apiVersion: '1.0',
         accessKeyId: 'accessKeyId',
         accessKeySecret: 'accessKeySecret',
+      });
+      try {
+        await client.request('action', {});
+      } catch (ex) {
+        expect(ex.message.startsWith('error message, URL: ')).to.be.ok();
+        return;
+      }
+      // should never be executed
+      expect(false).to.be.ok();
+    });
+
+    it('request with 400 should ok', async function () {
+      const provider = {
+        getCredentials: async () => {
+          return {
+            accessKeyId: 'accessKeyId',
+            accessKeySecret: 'accessKeySecret',
+          };
+        }
+      };
+      const client = new RPCClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        credentialsProvider: provider
       });
       try {
         await client.request('action', {});

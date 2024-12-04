@@ -44,6 +44,13 @@ describe('roa core', function () {
           apiVersion: '1.0'
         });
       }).to.throwException(/must pass "config\.accessKeyId"/);
+      expect(function () {
+        new ROAClient({
+          endpoint: 'http://ecs.aliyuncs.com/',
+          apiVersion: '1.0',
+          credentialsProvider: null
+        });
+      }).to.throwException(/must pass "config\.accessKeyId"/);
     });
 
     it('should pass into "config.accessKeySecret"', function () {
@@ -54,6 +61,19 @@ describe('roa core', function () {
           accessKeyId: 'accessKeyId'
         });
       }).to.throwException(/must pass "config\.accessKeySecret"/);
+    });
+
+    it('should pass into "config.credentialsProvider" with getCredentials()', function () {
+      expect(function () {
+        new ROAClient({
+          endpoint: 'http://ecs.aliyuncs.com/',
+          apiVersion: '1.0',
+          credentialsProvider: {
+            accessKeyId: 'test',
+            accessKeySecret: 'test',
+          }
+        });
+      }).to.throwException(/must pass "config\.credentialsProvider" with function "getCredentials\(\)"/);
     });
 
     it('should ok with http protocol', function () {
@@ -184,6 +204,25 @@ describe('roa core', function () {
       const result = await client.get('/', {}, {}, { rawBody: true });
       expect(result).to.be('raw body');
     });
+
+    it('request with credentialsProvider should ok', async function () {
+      const provider = {
+        getCredentials: async () => {
+          return {
+            accessKeyId: 'accessKeyId',
+            accessKeySecret: 'accessKeySecret',
+            securityToken: 'securityToken',
+          };
+        }
+      };
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        credentialsProvider: provider
+      });
+      const result = await client.request('GET', '/', {}, '', {}, { rawBody: true });
+      expect(result).to.be('raw body');
+    });
   });
 
   describe('request with json response should ok', function () {
@@ -201,6 +240,27 @@ describe('roa core', function () {
         accessKeyId: 'accessKeyId',
         accessKeySecret: 'accessKeySecret',
         securityToken: 'securityToken'
+      });
+      const result = await client.request('GET', '/');
+      expect(result).to.be.eql({
+        ok: true
+      });
+    });
+
+    it('json response with credentialsProvider should ok', async function () {
+      const provider = {
+        getCredentials: async () => {
+          return {
+            accessKeyId: 'accessKeyId',
+            accessKeySecret: 'accessKeySecret',
+            securityToken: 'securityToken',
+          };
+        }
+      };
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        credentialsProvider: provider
       });
       const result = await client.request('GET', '/');
       expect(result).to.be.eql({
@@ -228,6 +288,25 @@ describe('roa core', function () {
       const result = await client.request('GET', '/');
       expect(result).to.be('');
     });
+
+    it('json response with credentialsProvider should ok', async function () {
+      const provider = {
+        getCredentials: async () => {
+          return {
+            accessKeyId: 'accessKeyId',
+            accessKeySecret: 'accessKeySecret',
+            securityToken: 'securityToken',
+          };
+        }
+      };
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        credentialsProvider: provider
+      });
+      const result = await client.request('GET', '/');
+      expect(result).to.be('');
+    });
   });
 
   describe('request(400) with json response should ok', function () {
@@ -249,6 +328,34 @@ describe('roa core', function () {
         accessKeyId: 'accessKeyId',
         accessKeySecret: 'accessKeySecret',
         securityToken: 'securityToken'
+      });
+      try {
+        await client.request('GET', '/');
+      } catch (ex) {
+        expect(ex.message).to.be('code: 400, error message, requestid: requestid');
+        expect(ex.name).to.be('errorcodeError');
+        expect(ex.statusCode).to.be(400);
+        expect(ex.code).to.be('errorcode');
+        return;
+      }
+      // should never be executed
+      expect(false).to.be.ok();
+    });
+
+    it('json response with credentialsProvider should ok', async function () {
+      const provider = {
+        getCredentials: async () => {
+          return {
+            accessKeyId: 'accessKeyId',
+            accessKeySecret: 'accessKeySecret',
+            securityToken: 'securityToken',
+          };
+        }
+      };
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        credentialsProvider: provider
       });
       try {
         await client.request('GET', '/');
@@ -295,6 +402,34 @@ describe('roa core', function () {
       // should never be executed
       expect(false).to.be.ok();
     });
+
+    it('json response with credentialsProvider should ok', async function () {
+      const provider = {
+        getCredentials: async () => {
+          return {
+            accessKeyId: 'accessKeyId',
+            accessKeySecret: 'accessKeySecret',
+            securityToken: 'securityToken',
+          };
+        }
+      };
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        credentialsProvider: provider
+      });
+      try {
+        await client.request('GET', '/');
+      } catch (ex) {
+        expect(ex.message).to.be('code: 400, RAM/STS verification error, requestid: ');
+        expect(ex.name).to.be('10007Error');
+        expect(ex.statusCode).to.be(400);
+        expect(ex.code).to.be(10007);
+        return;
+      }
+      // should never be executed
+      expect(false).to.be.ok();
+    });
   });
 
   describe('request with unexpect json string response should ok', function () {
@@ -312,6 +447,32 @@ describe('roa core', function () {
         accessKeyId: 'accessKeyId',
         accessKeySecret: 'accessKeySecret',
         securityToken: 'securityToken'
+      });
+      try {
+        await client.request('GET', '/');
+      } catch (ex) {
+        expect(ex.message).to.be('parse response to json error');
+        expect(ex.name).to.be('FormatError');
+        return;
+      }
+      // should never be executed
+      expect(false).to.be.ok();
+    });
+
+    it('json response with credentialsProvider should ok', async function () {
+      const provider = {
+        getCredentials: async () => {
+          return {
+            accessKeyId: 'accessKeyId',
+            accessKeySecret: 'accessKeySecret',
+            securityToken: 'securityToken',
+          };
+        }
+      };
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        credentialsProvider: provider
       });
       try {
         await client.request('GET', '/');
@@ -438,6 +599,25 @@ describe('roa core', function () {
       expect(result).to.be.eql({ 'ok': true });
     });
 
+    it('should ok with credentialsProvider', async function () {
+      const provider = {
+        getCredentials: async () => {
+          return {
+            accessKeyId: 'accessKeyId',
+            accessKeySecret: 'accessKeySecret',
+            securityToken: 'securityToken',
+          };
+        }
+      };
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        credentialsProvider: provider
+      });
+      const result = await client.post('/', {}, 'text', {}, {});
+      expect(result).to.be.eql({ 'ok': true });
+    });
+
     it('should ok with query', async function () {
       const client = new ROAClient({
         endpoint: 'https://ecs.aliyuncs.com/',
@@ -470,6 +650,25 @@ describe('roa core', function () {
       const result = await client.put('/', {}, 'text', {}, {});
       expect(result).to.be.eql({ 'ok': true });
     });
+
+    it('should ok with credentialsProvider', async function () {
+      const provider = {
+        getCredentials: async () => {
+          return {
+            accessKeyId: 'accessKeyId',
+            accessKeySecret: 'accessKeySecret',
+            securityToken: 'securityToken',
+          };
+        }
+      };
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        credentialsProvider: provider
+      });
+      const result = await client.put('/', {}, 'text', {}, {});
+      expect(result).to.be.eql({ 'ok': true });
+    });
   });
 
   describe('delete should ok', function () {
@@ -487,6 +686,25 @@ describe('roa core', function () {
         accessKeyId: 'accessKeyId',
         accessKeySecret: 'accessKeySecret',
         securityToken: 'securityToken'
+      });
+      const result = await client.delete('/', {}, {}, {});
+      expect(result).to.be.eql({ 'ok': true });
+    });
+
+    it('should ok with credentialsProvider', async function () {
+      const provider = {
+        getCredentials: async () => {
+          return {
+            accessKeyId: 'accessKeyId',
+            accessKeySecret: 'accessKeySecret',
+            securityToken: 'securityToken',
+          };
+        }
+      };
+      const client = new ROAClient({
+        endpoint: 'https://ecs.aliyuncs.com/',
+        apiVersion: '1.0',
+        credentialsProvider: provider
       });
       const result = await client.delete('/', {}, {}, {});
       expect(result).to.be.eql({ 'ok': true });
