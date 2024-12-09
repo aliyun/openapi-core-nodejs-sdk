@@ -33,12 +33,15 @@ For example, The ECS OpenAPI(https://help.aliyun.com/document_detail/25490.html)
 
 And the endpoint list can be found at [here](https://help.aliyun.com/document_detail/25489.html), the center endpoint is ecs.aliyuncs.com. Add http protocol `http` or `https`, should be `http://ecs.aliyuncs.com/`.
 
+## Important Updates
+
+- Starting from version 1.8.0, CredentialsProvider is supported, and the signature logic of internal functions is updated. Developers who change the internal logic for calling need to pay attention to these changes.
 
 ## Online Demo
 
-**[API Developer Portal](https://next.api.aliyun.com)** provides the ability to call the cloud product OpenAPI online, and dynamically generate SDK Example code and quick retrieval interface, which can significantly reduce the difficulty of using the cloud API. **It is highly recommended**.
+**[API Developer Portal](https://api.aliyun.com)** provides the ability to call the cloud product OpenAPI online, and dynamically generate SDK Example code and quick retrieval interface, which can significantly reduce the difficulty of using the cloud API. **It is highly recommended**.
 
-<a href="https://next.api.aliyun.com" target="api_explorer">
+<a href="https://api.aliyun.com" target="api_explorer">
   <img src="https://img.alicdn.com/tfs/TB12GX6zW6qK1RjSZFmXXX0PFXa-744-122.png" width="180" />
 </a>
 
