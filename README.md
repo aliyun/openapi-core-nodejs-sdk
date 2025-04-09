@@ -13,6 +13,8 @@ The core SDK of POP API.
 [cov-image]: https://codecov.io/gh/aliyun/openapi-core-nodejs-sdk/branch/master/graph/badge.svg
 [cov-url]: https://codecov.io/gh/aliyun/openapi-core-nodejs-sdk
 
+The Alibaba Cloud V1.0 SDK will soon enter the Basic Security Maintenance phase and is no longer recommended for use. It is suggested to use the V2.0 SDK instead.
+
 ## Installation
 
 Install it and write into package.json dependences.
