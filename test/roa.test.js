@@ -147,7 +147,7 @@ describe('roa core', function () {
       securityToken: 'securityToken'
     });
     const sign = client.signature('stringtosign');
-    expect(sign).to.be('9/j11e+L9jW8mC9eUA23Wn3c0fs=');
+    expect(sign).to.be('fNua4OJ/ZbJ5ueGYFDu7ViPEJzh5ngZwSRSv/1nZVR8=');
   });
 
   it('buildAuthorization should ok', function () {
@@ -159,7 +159,7 @@ describe('roa core', function () {
       securityToken: 'securityToken'
     });
     const auth = client.buildAuthorization('stringtosign');
-    expect(auth).to.be('acs accessKeyId:9/j11e+L9jW8mC9eUA23Wn3c0fs=');
+    expect(auth).to.be('acs accessKeyId:fNua4OJ/ZbJ5ueGYFDu7ViPEJzh5ngZwSRSv/1nZVR8=');
   });
 
   function mock(response, body) {
