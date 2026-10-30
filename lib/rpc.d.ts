@@ -39,6 +39,7 @@ declare namespace RPCClient {
         accessKeyId: string;
         accessKeySecret: string;
         securityToken?: string;
+        signatureMethod?: 'HMAC-SHA256' | 'HMAC-SHA1';
         codes?: (string | number)[];
         opts?: object;
     }
