@@ -39,6 +39,7 @@ declare namespace RPCClient {
         accessKeyId: string;
         accessKeySecret: string;
         securityToken?: string;
+        /** Signature V2 only. SHA1 is less secure; fallback is not recommended. */
         signatureMethod?: 'HMAC-SHA256' | 'HMAC-SHA1';
         codes?: (string | number)[];
         opts?: object;
