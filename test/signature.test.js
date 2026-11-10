@@ -41,7 +41,7 @@ function mockRequest(check) {
 
 describe('Signature V2', function () {
   const selections = [
-    [false, undefined], [true, undefined], [true, 'HMAC-SHA1']
+    [false, undefined], [true, undefined], [true, 'HMAC-SHA1'], [true, 'HMAC-SHA256']
   ];
 
   for (const method of ['GET', 'POST']) {
@@ -58,7 +58,7 @@ describe('Signature V2', function () {
             const client = new RPCClient(config(credentials, provider));
             mockRequest(function (url, options) {
               const parameters = querystring.parse(method === 'POST' ? options.data : url.split('?')[1]);
-              assert.strictEqual(parameters.SignatureMethod, 'HMAC-SHA256');
+              assert.strictEqual(parameters.SignatureMethod, override || 'HMAC-SHA256');
               assert.strictEqual(parameters.SignatureVersion, '1.0');
               assert.strictEqual(parameters.AccessKeyId, credentials.accessKeyId);
               assert.strictEqual(parameters.SecurityToken, credentials.securityToken);
@@ -68,7 +68,7 @@ describe('Signature V2', function () {
               const canonical = Object.keys(parameters).sort().map(key =>
                 encode(key) + '=' + encode(parameters[key])).join('&');
               const stringToSign = method + '&%2F&' + encode(canonical);
-              assert.strictEqual(signature, crypto.createHmac('sha256', 'test-secret&')
+              assert.strictEqual(signature, crypto.createHmac(override === 'HMAC-SHA1' ? 'sha1' : 'sha256', 'test-secret&')
                 .update(stringToSign).digest('base64'));
             });
             const parameters = withParameters ? { Value: '中文 +/~*' } : {};
@@ -88,7 +88,7 @@ describe('Signature V2', function () {
             const query = withParameters ? { z: '中文 +/~*', a: 'first' } : {};
             mockRequest(function (url, options) {
               const headers = options.headers;
-              assert.strictEqual(headers['x-acs-signature-method'], 'HMAC-SHA256');
+              assert.strictEqual(headers['x-acs-signature-method'], override || 'HMAC-SHA256');
               assert.strictEqual(headers['x-acs-signature-version'], '1.0');
               assert.strictEqual(headers['x-acs-security-token'], credentials.securityToken);
               const canonicalHeaders = Object.keys(headers).filter(key => key.startsWith('x-acs-'))
@@ -99,7 +99,7 @@ describe('Signature V2', function () {
                 headers['content-type'] || '', headers.date, ''].join('\n')
                 + canonicalHeaders + canonicalResource;
               assert.strictEqual(headers.authorization, 'acs test-key:'
-                + crypto.createHmac('sha256', 'test-secret').update(stringToSign).digest('base64'));
+                + crypto.createHmac(override === 'HMAC-SHA1' ? 'sha1' : 'sha256', 'test-secret').update(stringToSign).digest('base64'));
             });
             const headers = override ? { 'X-Acs-Signature-Method': override } : {};
             try {
@@ -114,6 +114,58 @@ describe('Signature V2', function () {
       }
     }
   }
+
+  for (const value of [null, '', 'HMAC-MD5']) {
+    it(`rejects an unsupported RPC algorithm ${value}`, async function () {
+      const client = new RPCClient(config({ accessKeyId: 'key', accessKeySecret: 'secret' }, false));
+      try {
+        let error;
+        try {
+          await client.request('Action', { SignatureMethod: value });
+        } catch (caught) {
+          error = caught;
+        }
+        assert(error);
+        assert.strictEqual(error.message, 'Unsupported signature V2 algorithm');
+      } finally {
+        client.keepAliveAgent.destroy();
+      }
+    });
+
+    it(`rejects an unsupported ROA algorithm ${value}`, async function () {
+      const client = new ROAClient(config({ accessKeyId: 'key', accessKeySecret: 'secret' }, false));
+      try {
+        let error;
+        try {
+          await client.get('/', {}, { 'x-acs-signature-method': value });
+        } catch (caught) {
+          error = caught;
+        }
+        assert(error);
+        assert.strictEqual(error.message, 'Unsupported signature V2 algorithm');
+      } finally {
+        client.keepAliveAgent.destroy();
+      }
+    });
+  }
+
+  it('rejects conflicting case-insensitive ROA headers', async function () {
+    const client = new ROAClient(config({ accessKeyId: 'key', accessKeySecret: 'secret' }, false));
+    try {
+      let error;
+      try {
+        await client.get('/', {}, {
+          'X-Acs-Signature-Method': 'HMAC-SHA1', 'x-acs-signature-method': 'HMAC-SHA256'
+        });
+      } catch (caught) {
+        error = caught;
+      }
+      assert(error);
+      assert.strictEqual(error.message, 'Conflicting signature V2 algorithm headers');
+    } finally {
+      client.keepAliveAgent.destroy();
+    }
+  });
 
   it('legacy helpers use HMAC-SHA256', function () {
     const credentials = { accessKeyId: 'key', accessKeySecret: 'secret' };
