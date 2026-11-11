@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "debug": "^3.1.0",
-    "httpx": "^2.1.2",
+    "httpx": ">=2.1.2 <2.3.0",
     "json-bigint": "^1.0.0",
     "kitx": "^1.2.1",
     "xml2js": "^0.5.0"
